@@ -6,6 +6,8 @@
                     <div class="panel-heading">Timeline</div>
 
                     <div class="panel-body">
+                        <post-form></post-form>
+                        <hr>
                         <post v-for="post in posts" :post="post" :key="post.id"></post>
                     </div>
                 </div>
@@ -15,11 +17,13 @@
 </template>
 
 <script>
-    import Post from './Post.vue';
+    import eventHub from '../event'
+    import Post from './Post.vue'
+    import PostForm from './PostForm.vue'
 
     export default {
         components: {
-          Post
+          Post, PostForm
         },
 
         data() {
@@ -28,7 +32,15 @@
           }
         },
 
+        methods: {
+          addPost (post) {
+            this.posts.unshift(post)
+          }
+        },
+
         mounted() {
+            eventHub.$on('post-added', this.addPost)
+
             this.$http.get('/posts').then((response) => {
               this.posts = response.data
               // console.log(response.data);
