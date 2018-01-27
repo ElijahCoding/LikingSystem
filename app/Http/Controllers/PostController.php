@@ -27,6 +27,8 @@ class PostController extends Controller
           'body' => $request->body
         ]);
 
+        // broadcast an event and fire an event
+
         return $post->load(['user']);
     }
 }
