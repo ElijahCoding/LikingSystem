@@ -35,11 +35,27 @@
         methods: {
           addPost (post) {
             this.posts.unshift(post)
+          },
+
+          likePost(postId) {
+            var i
+            for (i = 0; i <= this.posts.length; i++) {
+                    if (this.posts[i].id === postId) {
+                        this.posts[i].likeCount++
+
+                        if (likedByCurrentUser) {
+                            this.posts[i].likedByCurrentUser = true
+                        }
+
+                        break
+                    }
+                }
           }
         },
 
         mounted() {
             eventHub.$on('post-added', this.addPost)
+            eventHub.$on('post-liked', this.likePost)
 
             this.$http.get('/posts').then((response) => {
               this.posts = response.data
