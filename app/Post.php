@@ -9,7 +9,7 @@ class Post extends Model
 {
     protected $guarded = [];
 
-    protected $appends = ['likeCount', 'likedByCurrentUser'];
+    protected $appends = ['likeCount', 'likedByCurrentUser', 'canBeLikedByCurrentUser'];
 
     public function user()
     {
@@ -33,6 +33,15 @@ class Post extends Model
       }
 
       return $this->likes->where('user_id', auth()->id())->count() === 1;
+    }
+
+    public function getCanBeLikedByCurrentUserAttribute()
+    {
+      if (!Auth::check()) {
+        return false;
+      }
+
+      return $this->user_id != Auth::user()->id;
     }
 
     public function likes()
